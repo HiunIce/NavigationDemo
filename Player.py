@@ -22,7 +22,7 @@ class Player:
             return
 
         action = self.decisionList.get()
-        res, pos = utils.collision_judge(cmap, self.robot.pos, action)
+        res, pos = utils.collision_judge(cmap, self.robot.pos, self.robot.pos+action)
         self.robot.pos = pos  # [100,100]
 
         y0, y1, x0, x1 = utils.getRangeMap(self.robot.pos, self.viewRadius, cmap.shape)
@@ -32,3 +32,5 @@ class Player:
         pos_t = [self.robot.pos[0] - x0, self.robot.pos[1] - y0]
         self.viewMap[y0:y1, x0:x1] += utils.getSampleLine(obs, pos_t, self.viewRadius)
         self.viewMap[self.viewMap > 255] = 255
+
+

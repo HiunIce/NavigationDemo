@@ -22,18 +22,17 @@ def toQImage(img):
             qimg = QImage(img.data, img.shape[1], img.shape[0], img.strides[0], QImage.Format_ARGB32)
             return qimg
 
-
-def collision_judge(map, pos, mov):
-    ep = pos + mov
+def collision_judge(map, pos, ep):
     rr, cc = draw.line(pos[1], pos[0], ep[1], ep[0])
     ep = pos
     for r, c in zip(rr, cc):
         if (r == pos[1]) and (c == pos[0]):
             continue
-        # print(r, c, "the res is:", map[r, c],
-        #       (map[r, c] == 0) , (r >= 0) , (c >=0) , (r<map.shape[0]) , (c<map.shape[1]))
-        rf = (r >= 0) and (c >=0) and (r<map.shape[0]) and (c<map.shape[1])
-        if (map[r, c] == 0) and rf:
+        # print(r, c, "the res is:", map[r, c], (map[r, c] == 0),
+        #         (r >= 0) , (c >=0) , (r<map.shape[0]) , (c<map.shape[1]))
+        rf = (r >= 0) and (c >=0) and (r < map.shape[0]) and (c < map.shape[1])
+        #print(r, c, map.shape)
+        if rf and (map[r, c] == 0):
             ep = [c, r]
         else:
             return False, ep

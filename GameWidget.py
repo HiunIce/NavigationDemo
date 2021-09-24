@@ -9,6 +9,7 @@ from GameCore import GameCore
 from GamePad import OctDirGamePad
 import numpy as np
 
+import RRTBase
 
 class GameWidget(QWidget):
     def __init__(self, parent=None):
