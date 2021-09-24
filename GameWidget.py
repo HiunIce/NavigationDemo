@@ -49,6 +49,18 @@ class GameWidget(QWidget):
         self.gamePad.setGeometry(self.userRect.x() + self.userRect.width() + spacing,
                                  0, 200, 200)
 
+
+    def mousePressEvent(self, a0) -> None:
+        if self.gameRect.contains(a0.pos()):
+            x = int(a0.pos().x() * (self.game.shape[0] / self.gameRect.width()))
+            y = int(a0.pos().y() * (self.game.shape[1] / self.gameRect.height()))
+            print('the real x y', x, y)
+            self.game.directMove('host', [x, y])
+            for i in range(30):
+                self.game.nextFrame()
+                self.render()
+                QApplication.processEvents()
+
     def paintEvent(self, a0) -> None:
         pt = QPainter(self)
         pt.drawImage(self.gameRect, self.canvas)

@@ -3,9 +3,11 @@ from GameGrid import GameGrid
 from Player import Player
 from PyQt5.QtGui import QPainter, QColor
 import utils
+import numpy as np
 
 class GameCore:
     def __init__(self, shape=(1000, 1000)):
+        self.shape = shape
         self.grid = GameGrid(shape)
         self.players = dict()
         self.addPlayer('host')
@@ -17,10 +19,13 @@ class GameCore:
 
 
     def setHostInput(self, action):
-        self.players['host'].decisionList.put(action)
+        self.players['host'].decisionList.put(action + self.players['host'].robot.pos)
+
+    def directMove(self, user, pos):
+        self.players[user].moveTheory(self.grid.currentMap, pos)
 
     def getHostView(self):
-        return utils.toQImage(self.players['host'].viewMap)
+        return utils.toQImage(self.players['host'].viewMap.astype(np.uint8))
 
     def addPlayer(self, name):
         self.players[name] = Player(name, len(self.players) + 1)

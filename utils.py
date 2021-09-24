@@ -22,6 +22,18 @@ def toQImage(img):
             qimg = QImage(img.data, img.shape[1], img.shape[0], img.strides[0], QImage.Format_ARGB32)
             return qimg
 
+
+def voxelization_traj(traj):
+    movs = []
+    #print('ready to move', len(traj)-1)
+    for i in range(len(traj)-1):
+        p1, p2 = traj[i], traj[i+1]
+        #print(p1, p2)
+        rr, cc = draw.line(p1[1], p1[0], p2[1], p2[0])
+        for r, c in zip(rr, cc):
+            movs.append([c, r])
+    return movs
+
 def collision_judge(map, pos, ep):
     rr, cc = draw.line(pos[1], pos[0], ep[1], ep[0])
     ep = pos
@@ -56,12 +68,12 @@ def getRangeMap(pos, rad, shape):
 
 
 def getSampleLine(obs, pos, rad):
-    print(' i am in ', pos, obs.shape)
+    #print(' i am in ', pos, obs.shape)
     nts = np.zeros_like(obs)
     rr, cc = draw.circle_perimeter(pos[1], pos[0], radius=rad, shape=obs.shape)
     #print(rr, cc)
     for r, c in zip(rr, cc):
-        print('~~~', pos[1], pos[0], r, c, ':::',r, c)
+        #print('~~~', pos[1], pos[0], r, c, ':::',r, c)
         aa, bb = draw.line(pos[1], pos[0], r, c)
         #nts[r, c] = 255
         for a, b in zip(aa, bb):
