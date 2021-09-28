@@ -110,21 +110,26 @@ def getFrontier2(view, wall):
 
 def getFrontier(view, wall):
     frontier = cv2.Laplacian(view, cv2.CV_8U, 3)
-    nf = np.flip(np.argwhere(frontier == 255))
+    frontier = np.flip(np.argwhere(frontier == 255))
+    nf = []
+    for f in frontier:
+        if wall[f[1], f[0]] != 255:
+            nf.append(f)
+    nf = np.array(nf)
     return nf
 
 from pyinstrument import Profiler
 
 def drawUserView(view, wall, front):
-    profiler = Profiler()
-    profiler.start()
+    # profiler = Profiler()
+    # profiler.start()
     img = cv2.cvtColor(view, cv2.COLOR_GRAY2BGR)
     wall, _ = cv2.findContours(wall,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     cv2.drawContours(img, wall, -1, color=(255,0,0), thickness=3)
     if len(front) != 0:
         img[front[:,1], front[:,0],:] = (0,255,0)
-    profiler.stop()
-    profiler.print()
+    # profiler.stop()
+    # profiler.print()
     return toQImage(img)
     
     
