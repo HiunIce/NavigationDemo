@@ -29,6 +29,7 @@ class GameCore:
         while not self.players['host'].decisionList.empty():
             self.nextFrame()
             callback()
+            self.players['host'].planTheory(self.grid.currentMap)
 
 
     def setHostInput(self, action):

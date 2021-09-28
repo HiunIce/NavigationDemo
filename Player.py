@@ -14,6 +14,7 @@ class Player:
         self.idx = idx
         self.robot = MobileRobot(self.idx, pos=[100, 100])
         self.viewRadius = 20
+        self.fronts = []
 
     def initObservation(self, shape):
         self.viewMap = np.zeros(shape=shape, dtype=np.uint16)
@@ -22,8 +23,8 @@ class Player:
     def clearDecision(self):
         self.decisionList = queue.Queue()
 
-    def planTheory(self):
-        pass
+    def planTheory(self, cmap):
+        self.moveTheory(cmap, self.fronts[-1])
 
     def moveTheory(self, cmap, tar):
         traj = RRT.fast_search(cmap, self.robot.pos, tar)
@@ -36,7 +37,6 @@ class Player:
             return
 
         action = self.decisionList.get()
-
         res, pos = utils.collision_judge(cmap, self.robot.pos, self.robot.pos + action)
         #res, pos = utils.collision_judge(cmap, self.robot.pos, action)
         self.robot.pos = pos  # [100,100]
@@ -49,6 +49,8 @@ class Player:
  
         self.viewMap[y0:y1, x0:x1] += mp
         self.viewMap[self.viewMap > 255] = 255
+
+        self.fronts = utils.getFrontier(self.viewMap.astype(np.uint8), self.wallMap)
         
         if wall.shape[0] != 0:
             for w in wall:
@@ -58,8 +60,5 @@ class Player:
         return np.sum(self.viewMap/255) / (self.viewMap.shape[0]*self.viewMap.shape[1])
         
     def getPlayerView(self):
-        v = self.viewMap.astype(np.uint8)
-        fronts = utils.getFrontier(v, self.wallMap)
-
-        return utils.drawUserView(v, self.wallMap, fronts)
+        return utils.drawUserView(self.viewMap.astype(np.uint8), self.wallMap, self.fronts)
 
