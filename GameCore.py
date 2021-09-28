@@ -10,18 +10,32 @@ class GameCore:
         self.shape = shape
         self.grid = GameGrid(shape)
         self.players = dict()
+        self.playersPrePos = dict()
         self.addPlayer('host')
 
     def nextFrame(self):
         self.grid.updateGameGrid(self.players.values())
-        for v in self.players.values():
-            v.act(self.grid.currentMap)
+        for k in self.players.keys():
+            self.players[k].act(self.grid.currentMap)
+            pos = self.players[k].robot.pos
+            pre_pos = self.playersPrePos[k]
+            diff = [abs(pre_pos[0]-pos[0]), abs(pre_pos[1]-pre_pos[1])]
+            if (diff[0] > 1.001) or (diff[1]>1.001):
+                print('user', k, 'is cheating', diff)
+            self.playersPrePos[k] = pos
+            
+        
+    def finishHostFrame(self, callback):
+        while not self.players['host'].decisionList.empty():
+            self.nextFrame()
+            callback()
 
 
     def setHostInput(self, action):
-        self.players['host'].decisionList.put(action + self.players['host'].robot.pos)
+        self.players['host'].decisionList.put(action)
 
     def directMove(self, user, pos):
+        self.players[user].clearDecision()
         self.players[user].moveTheory(self.grid.currentMap, pos)
 
     def getHostView(self):
@@ -29,6 +43,7 @@ class GameCore:
 
     def addPlayer(self, name):
         self.players[name] = Player(name, len(self.players) + 1)
+        self.playersPrePos[name] = np.array(self.players[name].robot.pos)
         self.players[name].initObservation(self.grid.currentMap.shape)
 
     def removePlayer(self, name):

@@ -18,17 +18,16 @@ class Player:
     def initObservation(self, shape):
         self.viewMap = np.zeros(shape=shape, dtype=np.uint16)
 
+    def clearDecision(self):
+        self.decisionList = queue.Queue()
+
     def planTheory(self):
         pass
 
     def moveTheory(self, cmap, tar):
-        #print('ready to get traj')
         traj = RRT.fast_search(cmap, self.robot.pos, tar)
-        #print(traj)
-        acts = utils.voxelization_traj(traj)
-        #print('voxelization fin', acts)
+        acts = utils.traj2acts(traj)
         for a in acts:
-            #print(a)
             self.decisionList.put(a)
 
     def act(self, cmap):
@@ -36,8 +35,9 @@ class Player:
             return
 
         action = self.decisionList.get()
-        #res, pos = utils.collision_judge(cmap, self.robot.pos, self.robot.pos + action)
-        res, pos = utils.collision_judge(cmap, self.robot.pos, action)
+
+        res, pos = utils.collision_judge(cmap, self.robot.pos, self.robot.pos + action)
+        #res, pos = utils.collision_judge(cmap, self.robot.pos, action)
         self.robot.pos = pos  # [100,100]
 
         y0, y1, x0, x1 = utils.getRangeMap(self.robot.pos, self.viewRadius, cmap.shape)
@@ -47,4 +47,7 @@ class Player:
         self.viewMap[y0:y1, x0:x1] += utils.getSampleLine(obs, pos_t, self.viewRadius)
         self.viewMap[self.viewMap > 255] = 255
 
+    def getExploreRate(self):
+        return np.sum(self.viewMap/255) / (self.viewMap.shape[0]*self.viewMap.shape[1])
+        
 

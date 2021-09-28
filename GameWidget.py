@@ -54,17 +54,17 @@ class GameWidget(QWidget):
         if self.gameRect.contains(a0.pos()):
             x = int(a0.pos().x() * (self.game.shape[0] / self.gameRect.width()))
             y = int(a0.pos().y() * (self.game.shape[1] / self.gameRect.height()))
-            print('the real x y', x, y)
             self.game.directMove('host', [x, y])
-            for i in range(30):
-                self.game.nextFrame()
+            def callback():
                 self.render()
                 QApplication.processEvents()
+            self.game.finishHostFrame(callback)
 
     def paintEvent(self, a0) -> None:
         pt = QPainter(self)
         pt.drawImage(self.gameRect, self.canvas)
         pt.drawImage(self.userRect, self.userView)
+        self.setWindowTitle('{}'.format(self.game.players['host'].getExploreRate()))
 
 def testWidget():
     import sys

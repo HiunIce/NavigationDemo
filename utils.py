@@ -32,7 +32,13 @@ def voxelization_traj(traj):
         rr, cc = draw.line(p1[1], p1[0], p2[1], p2[0])
         for r, c in zip(rr, cc):
             movs.append([c, r])
+    movs = np.array(movs)
     return movs
+
+def traj2acts(traj):
+    pos = voxelization_traj(traj)
+    diff = np.diff(pos, axis=0)
+    return diff
 
 def collision_judge(map, pos, ep):
     rr, cc = draw.line(pos[1], pos[0], ep[1], ep[0])
