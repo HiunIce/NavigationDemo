@@ -17,6 +17,7 @@ class Player:
 
     def initObservation(self, shape):
         self.viewMap = np.zeros(shape=shape, dtype=np.uint16)
+        self.wallMap = np.zeros(shape=shape, dtype=np.uint8)
 
     def clearDecision(self):
         self.decisionList = queue.Queue()
@@ -44,10 +45,21 @@ class Player:
 
         obs = cmap[y0:y1, x0:x1]
         pos_t = [self.robot.pos[0] - x0, self.robot.pos[1] - y0]
-        self.viewMap[y0:y1, x0:x1] += utils.getSampleLine(obs, pos_t, self.viewRadius)
+        mp, wall = utils.getSampleLine(obs, pos_t, self.viewRadius)
+ 
+        self.viewMap[y0:y1, x0:x1] += mp
         self.viewMap[self.viewMap > 255] = 255
+        
+        if wall.shape[0] != 0:
+            for w in wall:
+                self.wallMap[w[0]+y0,w[1]+x0] = 255
 
     def getExploreRate(self):
         return np.sum(self.viewMap/255) / (self.viewMap.shape[0]*self.viewMap.shape[1])
         
+    def getPlayerView(self):
+        v = self.viewMap.astype(np.uint8)
+        fronts = utils.getFrontier(v, self.wallMap)
+
+        return utils.drawUserView(v, self.wallMap, fronts)
 

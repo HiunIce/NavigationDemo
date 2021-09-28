@@ -35,11 +35,14 @@ class GameCore:
         self.players['host'].decisionList.put(action)
 
     def directMove(self, user, pos):
+        if self.grid.currentMap[pos[1], pos[0]] == 255:
+            print('you clicked the wall')
+            return
         self.players[user].clearDecision()
         self.players[user].moveTheory(self.grid.currentMap, pos)
 
     def getHostView(self):
-        return utils.toQImage(self.players['host'].viewMap.astype(np.uint8))
+        return self.players['host'].getPlayerView()
 
     def addPlayer(self, name):
         self.players[name] = Player(name, len(self.players) + 1)

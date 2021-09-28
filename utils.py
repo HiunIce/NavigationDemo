@@ -78,6 +78,7 @@ def getSampleLine(obs, pos, rad):
     nts = np.zeros_like(obs)
     rr, cc = draw.circle_perimeter(pos[1], pos[0], radius=rad, shape=obs.shape)
     #print(rr, cc)
+    wallPnts = []
     for r, c in zip(rr, cc):
         #print('~~~', pos[1], pos[0], r, c, ':::',r, c)
         aa, bb = draw.line(pos[1], pos[0], r, c)
@@ -85,7 +86,45 @@ def getSampleLine(obs, pos, rad):
         for a, b in zip(aa, bb):
             if (a == pos[1]) and (b == pos[0]):
                 continue
-            if obs[a, b] != 0:
+            if obs[a, b] == 255:
+                wallPnts.append([a, b])
                 break
             nts[a, b] = 255
-    return nts
+    return nts, np.array(wallPnts, dtype=np.int32)
+
+
+def getFrontier2(view, wall):
+    frontier, _ = cv2.findContours(view,
+                        cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    if len(frontier) == 0:
+        return []
+    print('front num', len(frontier))
+    frontier = np.vstack(frontier).reshape(-1,2)
+    nf = []
+    for f in frontier:
+        #if wall[f[0], f[1]] != 255:
+            nf.append(f)
+    nf = np.array(nf)
+    print(nf.shape,' ????')
+    return nf
+
+def getFrontier(view, wall):
+    frontier = cv2.Laplacian(view, cv2.CV_8U, 3)
+    nf = np.flip(np.argwhere(frontier == 255))
+    return nf
+
+from pyinstrument import Profiler
+
+def drawUserView(view, wall, front):
+    profiler = Profiler()
+    profiler.start()
+    img = cv2.cvtColor(view, cv2.COLOR_GRAY2BGR)
+    wall, _ = cv2.findContours(wall,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+    cv2.drawContours(img, wall, -1, color=(255,0,0), thickness=3)
+    if len(front) != 0:
+        img[front[:,1], front[:,0],:] = (0,255,0)
+    profiler.stop()
+    profiler.print()
+    return toQImage(img)
+    
+    
