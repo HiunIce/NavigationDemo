@@ -24,7 +24,7 @@ class Player:
         self.decisionList = queue.Queue()
 
     def planTheory(self, cmap):
-        self.moveTheory(cmap, self.fronts[-1])
+        self.moveTheory(cmap, self.fronts[np.random.randint(0, len(self.fronts))])
 
     def moveTheory(self, cmap, tar):
         traj = RRT.fast_search(cmap, self.robot.pos, tar)
