@@ -5,9 +5,10 @@ import utils
 class RRTArgs:
     def __init__(self):
         self.move_dis = 10
-        self.direct_rate = 0.2
-        self.brave_rate = 0.3
-        self.br_changeRate = 0.99
+        self.direct_rate = 0.3
+
+        self.brave_rate = 0.6
+        self.br_changeRate = 0.96
         self.brave_scale = 5
         self.bs_changeRate = 0.6
         self.end_check_dis = 6
@@ -35,7 +36,9 @@ class RRT:
         self.displayCallBack = None
 
     @staticmethod
-    def fast_search(cmap, pos, tar, ok=255, displayCallback=None):
+    def fast_search(cmap, pos, tar, ok=0, displayCallback=None):
+        if (pos[0] == tar[0]) and (pos[1] == tar[1]):
+            return np.array([])
         rrt = RRT(cmap, pos, tar, ok)
         rrt.displayCallBack = displayCallback
         if displayCallback is not None:
@@ -83,8 +86,8 @@ class RRT:
             #print(p, 'and the filtered pnt is', tar)
             da = np.linalg.norm(np.array(self.target) - np.array(p))
             #print('the dis is', de)
-            if da < self.args.end_check_dis: # check if finished
-                res, pos = utils.collision_judge(self.cmap, self.target, p)
+            if da < self.args.end_check_dis:  # check if finished
+                res, pos = utils.collision_judge(self.cmap, self.target, p, ok=self.ok_val)
                 if res:
                     self.__parentList.append(idx)
                     self.__posList.append(self.target)

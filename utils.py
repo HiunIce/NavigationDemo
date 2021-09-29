@@ -40,8 +40,10 @@ def traj2acts(traj):
     diff = np.diff(pos, axis=0)
     return diff
 
-def collision_judge(map, pos, ep):
+def collision_judge(map, pos, ep, ok=0):
     rr, cc = draw.line(pos[1], pos[0], ep[1], ep[0])
+    if(pos[0] == ep[0]) and (pos[1] == ep[1]):
+        return False, pos
     ep = pos
     for r, c in zip(rr, cc):
         if (r == pos[1]) and (c == pos[0]):
@@ -50,11 +52,20 @@ def collision_judge(map, pos, ep):
         #         (r >= 0) , (c >=0) , (r<map.shape[0]) , (c<map.shape[1]))
         rf = (r >= 0) and (c >=0) and (r < map.shape[0]) and (c < map.shape[1])
         #print(r, c, map.shape)
-        if rf and (map[r, c] == 0):
+        if rf and (map[r, c] == ok):
             ep = [c, r]
         else:
             return False, ep
     return True, ep
+
+def collision_judge_step_fast(map, tar, action, ok=0):
+    ep = tar + action
+    r, c = ep[1], ep[0]
+    rf = (r >= 0) and (c >= 0) and (r < map.shape[0]) and (c < map.shape[1])
+    if rf and (map[r, c] == ok):
+        return True, ep
+    else:
+        return False, tar
 
 
 def getRangeMap(pos, rad, shape):
@@ -113,19 +124,24 @@ def getFrontier(view, wall):
     frontier = np.flip(np.argwhere(frontier == 255))
     nf = []
     for f in frontier:
-        if wall[f[1], f[0]] != 255:
+        if (wall[f[1], f[0]] != 255)\
+                and (f[0] != 0) and(f[1] != 0) \
+                and (f[0] != wall.shape[0]-1) and(f[1] != wall.shape[1]-1):
             nf.append(f)
     nf = np.array(nf)
     return nf
 
 from pyinstrument import Profiler
 
-def drawUserView(view, wall, front):
+def drawUserView(view, wall, front, pnts=None):
     # profiler = Profiler()
     # profiler.start()
     img = cv2.cvtColor(view, cv2.COLOR_GRAY2BGR)
     wall, _ = cv2.findContours(wall,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     cv2.drawContours(img, wall, -1, color=(255,0,0), thickness=3)
+    if pnts is not None:
+        for p in pnts:
+            cv2.circle(img, p, 5, (0,0,255), 3)
     if len(front) != 0:
         img[front[:,1], front[:,0],:] = (0,255,0)
     # profiler.stop()

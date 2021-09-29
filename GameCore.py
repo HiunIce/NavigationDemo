@@ -29,7 +29,11 @@ class GameCore:
         while not self.players['host'].decisionList.empty():
             self.nextFrame()
             callback()
-            self.players['host'].planTheory(self.grid.currentMap)
+            self.players['host'].planTheory()
+        # while len(self.players['host'].fronts) != 0:
+        #     self.players['host'].planTheory(self.grid.currentMap)
+        while self.players['host'].explore_rate < 0.8:
+            self.players['host'].planTheory()
 
 
     def setHostInput(self, action):
@@ -40,7 +44,7 @@ class GameCore:
             print('you clicked the wall')
             return
         self.players[user].clearDecision()
-        self.players[user].moveTheory(self.grid.currentMap, pos)
+        self.players[user].moveTheory_cheat(self.grid.currentMap, pos)
 
     def getHostView(self):
         return self.players['host'].getPlayerView()
