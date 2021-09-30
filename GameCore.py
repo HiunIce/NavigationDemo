@@ -26,14 +26,18 @@ class GameCore:
             
         
     def finishHostFrame(self, callback):
+
+
         while not self.players['host'].decisionList.empty():
             self.nextFrame()
             callback()
-            self.players['host'].planTheory()
-        # while len(self.players['host'].fronts) != 0:
-        #     self.players['host'].planTheory(self.grid.currentMap)
+        #     self.players['host'].planTheory()
+        # # while len(self.players['host'].fronts) != 0:
+        # #     self.players['host'].planTheory(self.grid.currentMap)
         while self.players['host'].explore_rate < 0.8:
             self.players['host'].planTheory()
+            self.nextFrame()
+            callback()
 
 
     def setHostInput(self, action):

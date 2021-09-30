@@ -12,7 +12,7 @@ class Player:
         self.viewMap = None
         self.decisionList = queue.Queue()
         self.idx = idx
-        self.robot = MobileRobot(self.idx, pos=[100, 100])
+        self.robot = MobileRobot(self.idx, pos=[8, 496])
         self.viewRadius = 20
         self.fronts = []
         self.target = None
@@ -29,7 +29,8 @@ class Player:
         if not self.decisionList.empty():
             return
         def closest():
-            diff = np.linalg.norm(self.fronts - self.robot.pos, axis=1)
+            p = np.array(self.robot.pos[1], self.robot.pos[0])
+            diff = np.linalg.norm(self.fronts - p, axis=1)
             idx = np.argmin(diff, axis=0)
             tar = self.fronts[idx]
 
@@ -47,7 +48,18 @@ class Player:
 
     def moveTheory(self, tar):
         print('ready to make rrt', self.robot.pos, '----->',tar)
-        traj = RRT.fast_search(self.wallMap, self.robot.pos, tar, ok=0)
+        dis = self.robot.pos - tar
+        if np.linalg.norm(dis) < 20:
+            print('try it easy', tar, '------>', tar)
+            res, pos = utils.collision_judge(self.wallMap, self.robot.pos, tar)
+            if res:
+                traj = utils.moveDirectly(self.robot.pos, tar)
+            else:
+                traj = RRT.fast_search(self.wallMap, self.robot.pos, tar, ok=0)
+            print('move fin')
+        else:
+            traj = RRT.fast_search(self.wallMap, self.robot.pos, tar, ok=0)
+        print('ready to do acts')
         acts = utils.traj2acts(traj)
         print('traj:', 'acts!', acts.shape, '???? pos, tar:', self.robot.pos, tar)
 
@@ -62,9 +74,10 @@ class Player:
 
     def act(self, cmap):
         if self.decisionList.qsize() == 0:
+            print('no actions left')
             return
-
         action = self.decisionList.get()
+        #print('act', action)
         res, pos = utils.collision_judge(cmap, self.robot.pos, self.robot.pos + action)
         #res, pos = utils.collision_judge(cmap, self.robot.pos, action)
         #res, pos = utils.collision_judge_step_fast(cmap, self.robot.pos, action)
@@ -80,8 +93,9 @@ class Player:
         obs = cmap[y0:y1, x0:x1]
         pos_t = [self.robot.pos[0] - x0, self.robot.pos[1] - y0]
         mp, wall = utils.getSampleLine(obs, pos_t, self.viewRadius)
- 
+
         self.viewMap[y0:y1, x0:x1] += mp
+        self.viewMap[pos[1], pos[0]] = 255
         self.viewMap[self.viewMap > 255] = 255
 
         self.fronts = utils.getFrontier(self.viewMap.astype(np.uint8), self.wallMap)

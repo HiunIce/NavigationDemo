@@ -26,6 +26,8 @@ def toQImage(img):
 def voxelization_traj(traj):
     movs = []
     #print('ready to move', len(traj)-1)
+    if len(traj) == 0:
+        return[]
     for i in range(len(traj)-1):
         p1, p2 = traj[i], traj[i+1]
         #print(p1, p2)
@@ -35,15 +37,22 @@ def voxelization_traj(traj):
     movs = np.array(movs)
     return movs
 
+def moveDirectly(pos, tar):
+    if(pos[0] == tar[0]) and (pos[1] == tar[1]):
+        return []
+    rr, cc = draw.line(pos[1], pos[0], tar[1], tar[0])
+    return np.array(list(zip(rr, cc)))
+
+
 def traj2acts(traj):
     pos = voxelization_traj(traj)
     diff = np.diff(pos, axis=0)
     return diff
 
 def collision_judge(map, pos, ep, ok=0):
-    rr, cc = draw.line(pos[1], pos[0], ep[1], ep[0])
     if(pos[0] == ep[0]) and (pos[1] == ep[1]):
         return False, pos
+    rr, cc = draw.line(pos[1], pos[0], ep[1], ep[0])
     ep = pos
     for r, c in zip(rr, cc):
         if (r == pos[1]) and (c == pos[0]):
@@ -57,6 +66,7 @@ def collision_judge(map, pos, ep, ok=0):
         else:
             return False, ep
     return True, ep
+
 
 def collision_judge_step_fast(map, tar, action, ok=0):
     ep = tar + action
@@ -87,24 +97,32 @@ def getRangeMap(pos, rad, shape):
 def getSampleLine(obs, pos, rad):
     #print(' i am in ', pos, obs.shape)
     nts = np.zeros_like(obs)
-    rr, cc = draw.circle_perimeter(pos[1], pos[0], radius=rad, shape=obs.shape)
-    #print(rr, cc)
+    pos = np.array(pos)
+    #rr, cc = draw.circle_perimeter(pos[1], pos[0], radius=rad, shape=obs.shape)
+    #
+    rr, cc = draw.rectangle_perimeter(pos-rad//2,
+                                      pos+rad//2, shape=obs.shape)
+    w, h = obs.shape[1], obs.shape[0]
     wallPnts = []
     for r, c in zip(rr, cc):
-        #print('~~~', pos[1], pos[0], r, c, ':::',r, c)
-        aa, bb = draw.line(pos[1], pos[0], r, c)
+        aa, bb = draw.line(pos[1], pos[0], c, r)
         #nts[r, c] = 255
         for a, b in zip(aa, bb):
+            #print(a, b, '????', r, c)
             if (a == pos[1]) and (b == pos[0]):
                 continue
-            if obs[a, b] == 255:
-                wallPnts.append([a, b])
+            if (a >= w) or (b >= h):
+                continue
+            if obs[b, a] == 255:
+                wallPnts.append([b, a])
                 break
-            nts[a, b] = 255
+            nts[b, a] = 255
+    nts[rr, cc] = 255
     return nts, np.array(wallPnts, dtype=np.int32)
 
 
 def getFrontier2(view, wall):
+    # not used anymore
     frontier, _ = cv2.findContours(view,
                         cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     if len(frontier) == 0:
@@ -118,6 +136,7 @@ def getFrontier2(view, wall):
     nf = np.array(nf)
     print(nf.shape,' ????')
     return nf
+
 
 def getFrontier(view, wall):
     frontier = cv2.Laplacian(view, cv2.CV_8U, 3)
@@ -137,7 +156,7 @@ def drawUserView(view, wall, front, pnts=None):
     # profiler = Profiler()
     # profiler.start()
     img = cv2.cvtColor(view, cv2.COLOR_GRAY2BGR)
-    wall, _ = cv2.findContours(wall,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+    wall, _ = cv2.findContours(wall, cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     cv2.drawContours(img, wall, -1, color=(255,0,0), thickness=3)
     if pnts is not None:
         for p in pnts:
@@ -147,5 +166,16 @@ def drawUserView(view, wall, front, pnts=None):
     # profiler.stop()
     # profiler.print()
     return toQImage(img)
+
+
+if __name__ == '__main__':
+    # for test
+    import matplotlib.pyplot as plt
+
+    img = np.zeros(shape=(20, 41), dtype=np.int32)
+    img, w = getSampleLine(img, np.array([20, 20]), 20)
+    print(img.dtype, img.shape)
+    plt.imshow(img)
+    plt.show()
     
     
