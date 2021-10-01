@@ -41,7 +41,7 @@ def moveDirectly(pos, tar):
     if(pos[0] == tar[0]) and (pos[1] == tar[1]):
         return []
     rr, cc = draw.line(pos[1], pos[0], tar[1], tar[0])
-    return np.array(list(zip(rr, cc)))
+    return np.array(list(zip(cc, rr)))
 
 
 def traj2acts(traj):
@@ -51,6 +51,7 @@ def traj2acts(traj):
 
 def collision_judge(map, pos, ep, ok=0):
     if(pos[0] == ep[0]) and (pos[1] == ep[1]):
+        print('that false')
         return False, pos
     rr, cc = draw.line(pos[1], pos[0], ep[1], ep[0])
     ep = pos
@@ -64,6 +65,9 @@ def collision_judge(map, pos, ep, ok=0):
         if rf and (map[r, c] == ok):
             ep = [c, r]
         else:
+            # print(r, c, map.shape, (r >= 0) , (c >=0) , (r < map.shape[0]) , (c < map.shape[1]))
+            # if rf:
+            #     print(map[r, c], 'collision')
             return False, ep
     return True, ep
 

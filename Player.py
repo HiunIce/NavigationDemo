@@ -56,20 +56,24 @@ class Player:
                 traj = utils.moveDirectly(self.robot.pos, tar)
             else:
                 traj = RRT.fast_search(self.wallMap, self.robot.pos, tar, ok=0)
-            print('move fin')
+            print('dir move fin', res)
         else:
             traj = RRT.fast_search(self.wallMap, self.robot.pos, tar, ok=0)
         print('ready to do acts')
         acts = utils.traj2acts(traj)
         print('traj:', 'acts!', acts.shape, '???? pos, tar:', self.robot.pos, tar)
 
-        for a in acts:
-            self.decisionList.put(a)
+        self.putActions(acts)
 
     def moveTheory_cheat(self, cmap, tar):
         traj = RRT.fast_search(cmap, self.robot.pos, tar)
         acts = utils.traj2acts(traj)
+        self.putActions(acts)
+
+    def putActions(self, acts):
         for a in acts:
+            if (a[0] == 0) and (a[1] == 0):
+                continue
             self.decisionList.put(a)
 
     def act(self, cmap):
@@ -77,8 +81,9 @@ class Player:
             print('no actions left')
             return
         action = self.decisionList.get()
-        #print('act', action)
         res, pos = utils.collision_judge(cmap, self.robot.pos, self.robot.pos + action)
+
+        #print('act', action, res, pos)
         #res, pos = utils.collision_judge(cmap, self.robot.pos, action)
         #res, pos = utils.collision_judge_step_fast(cmap, self.robot.pos, action)
         if 0:#not res:
