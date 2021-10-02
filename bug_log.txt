@@ -1,0 +1,166 @@
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+idx 3866 tar [29  1] choice num 3867 pos: [28, 1]
+ready to make rrt [28, 1] -----> [29  1]
+try it easy [29  1] ------> [29  1]
+dir move fin True
+ready to do acts
+traj: acts! (1, 2) ???? pos, tar: [28, 1] [29  1]
+mov theory fin ----> [29  1]
+
+Process finished with exit code -1

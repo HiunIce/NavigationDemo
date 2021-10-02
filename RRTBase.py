@@ -16,7 +16,7 @@ class RRTArgs:
 
 
 class RRT:
-    def __init__(self, cmap, pos, tar, ok=0):
+    def __init__(self, cmap, pos, tar, ok=0, args=None):
 
         self.__posList = []
         self.__parentList = []
@@ -28,7 +28,10 @@ class RRT:
         self.__posList.append(pos)
         self.__parentList.append(-1)
         ##############
-        self.args = RRTArgs()
+        if args:
+            self.args = args
+        else:
+            self.args = RRTArgs()
         self.modify_line = True
         self.sampleTimes = 0
         #######
@@ -36,10 +39,13 @@ class RRT:
         self.displayCallBack = None
 
     @staticmethod
-    def fast_search(cmap, pos, tar, ok=0, displayCallback=None):
+    def fast_search(cmap, pos, tar, ok=0, displayCallback=None, args=None):
         if (pos[0] == tar[0]) and (pos[1] == tar[1]):
             return np.array([])
-        rrt = RRT(cmap, pos, tar, ok)
+        if args is not None:
+            rrt = RRT(cmap, pos, tar, ok, args=args)
+        else:
+            rrt = RRT(cmap, pos, tar, ok)
         rrt.displayCallBack = displayCallback
         if displayCallback is not None:
             rrt.show_map = cmap.copy()
@@ -87,12 +93,12 @@ class RRT:
             da = np.linalg.norm(np.array(self.target) - np.array(p))
             #print('the dis is', de)
             if da < self.args.end_check_dis:  # check if finished
-                res, pos = utils.collision_judge(self.cmap, self.target, p, ok=self.ok_val)
+                res, pos = collision_judge_rrt(self.cmap, self.target, p, ok=self.ok_val)
                 if res:
                     self.__parentList.append(idx)
                     self.__posList.append(self.target)
                     return True
-            res, pos = utils.collision_judge(self.cmap, p, tar)
+            res, pos = collision_judge_rrt(self.cmap, p, tar)
             # Change Args
             bad_times += 1
             br = br * self.args.br_changeRate
@@ -141,7 +147,7 @@ class RRT:
             npts.append(pnts[start])
             #print('append', start)
             for i in range(num-1, start, -1):
-                res, pos = utils.collision_judge(self.cmap, pnts[start], pnts[i])
+                res, pos = collision_judge_rrt(self.cmap, pnts[start], pnts[i])
                 #print(res, pos, start, i, num, '??', pnts[start], pnts[i])
                 if res:
                     start = i-1
@@ -158,6 +164,23 @@ class RRT:
             p2 = pnts[i+1]
             res, pos = utils.collision_judge(cmap, p1, p2)
             #print(res, pos, '????', p1, p2)
+
+
+from skimage.draw import draw
+
+def collision_judge_rrt(map, pos, ep, ok=0):
+    rr, cc = draw.line(pos[1], pos[0], ep[1], ep[0])
+    ep = pos
+    for r, c in zip(rr, cc):
+        if (r == pos[1]) and (c == pos[0]):
+            continue
+        rf = (r >= 0) and (c >=0) and (r < map.shape[0]) and (c < map.shape[1])
+        if rf and (map[r, c] == ok):
+            ep = [c, r]
+        else:
+            return False, ep
+    return True, ep
+
 
 if __name__ == "__main__":
     import RRT_Test

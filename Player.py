@@ -4,19 +4,25 @@ from MobileRobot import MobileRobot
 import queue
 import utils
 
-from RRTBase import RRT
+from RRTBase import RRT, RRTArgs
 
 class Player:
-    def __init__(self, name, idx):
+    def __init__(self, name, idx, pos):
         self.name = name
         self.viewMap = None
         self.decisionList = queue.Queue()
         self.idx = idx
-        self.robot = MobileRobot(self.idx, pos=[8, 496])
+        self.robot = MobileRobot(self.idx, pos=pos)
         self.viewRadius = 20
         self.fronts = []
         self.target = None
         self.explore_rate = 0.0
+        self.rrt_args_fast = RRTArgs()
+        self.rrt_args_fast.maxSampleTimes = 50
+        self.rrt_args_fast.direct_rate = 0.7
+
+        self.rrt_args_normal = RRTArgs()
+        self.rrt_args_normal.maxSampleTimes = 500
 
     def initObservation(self, shape):
         self.viewMap = np.zeros(shape=shape, dtype=np.uint16)
@@ -29,14 +35,14 @@ class Player:
         if not self.decisionList.empty():
             return
         def closest():
-            p = np.array(self.robot.pos[1], self.robot.pos[0])
+            p = np.array(self.robot.pos[0], self.robot.pos[1])
             diff = np.linalg.norm(self.fronts - p, axis=1)
             idx = np.argmin(diff, axis=0)
             tar = self.fronts[idx]
-
+            print('the closet is', idx, tar)
             if (self.robot.pos[0] == tar[0]) and (self.robot.pos[1] == tar[1]):
-                tar[0] += np.random.randint(-10, 10)
-                tar[1] += np.random.randint(-10, 10)
+                tar[0] += np.random.randint(-2, 2)
+                tar[1] += np.random.randint(-2, 2)
                 tar = np.clip(tar, 0, self.wallMap.shape[0]-1)
 
             print('idx', idx, 'tar', tar,  'choice num', diff.shape[0],
@@ -52,13 +58,15 @@ class Player:
         if np.linalg.norm(dis) < 20:
             print('try it easy', tar, '------>', tar)
             res, pos = utils.collision_judge(self.wallMap, self.robot.pos, tar)
+
             if res:
                 traj = utils.moveDirectly(self.robot.pos, tar)
             else:
-                traj = RRT.fast_search(self.wallMap, self.robot.pos, tar, ok=0)
+                print('then i will make rrt')
+                traj = RRT.fast_search(self.wallMap, self.robot.pos, tar, ok=0, args=self.rrt_args_fast)
             print('dir move fin', res)
         else:
-            traj = RRT.fast_search(self.wallMap, self.robot.pos, tar, ok=0)
+            traj = RRT.fast_search(self.wallMap, self.robot.pos, tar, ok=0, args=self.rrt_args_normal)
         print('ready to do acts')
         acts = utils.traj2acts(traj)
         print('traj:', 'acts!', acts.shape, '???? pos, tar:', self.robot.pos, tar)
@@ -71,10 +79,12 @@ class Player:
         self.putActions(acts)
 
     def putActions(self, acts):
+        pre = self.decisionList.qsize()
         for a in acts:
             if (a[0] == 0) and (a[1] == 0):
                 continue
             self.decisionList.put(a)
+        print('put actions', pre, '---->', self.decisionList.qsize())
 
     def act(self, cmap):
         if self.decisionList.qsize() == 0:
@@ -83,12 +93,11 @@ class Player:
         action = self.decisionList.get()
         res, pos = utils.collision_judge(cmap, self.robot.pos, self.robot.pos + action)
 
-        #print('act', action, res, pos)
         #res, pos = utils.collision_judge(cmap, self.robot.pos, action)
         #res, pos = utils.collision_judge_step_fast(cmap, self.robot.pos, action)
-        if 0:#not res:
+        if not res:
             # directly give up all
-            # self.clearDecision()
+            self.clearDecision()
             print(self.robot.pos+action, 'ready???',
                   self.robot.pos, action, '---->', pos, 'real, left:', self.decisionList.qsize())
         self.robot.pos = pos  # [100,100]
@@ -104,7 +113,6 @@ class Player:
         self.viewMap[self.viewMap > 255] = 255
 
         self.fronts = utils.getFrontier(self.viewMap.astype(np.uint8), self.wallMap)
-        
         if wall.shape[0] != 0:
             for w in wall:
                 self.wallMap[w[0]+y0,w[1]+x0] = 255

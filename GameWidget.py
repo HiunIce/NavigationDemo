@@ -16,7 +16,7 @@ class GameWidget(QWidget):
         QWidget.__init__(self, parent=parent)
         self.resize(1500, 500)
         self.setWindowTitle("Game Widget")
-        self.game = GameCore((500,500))
+        self.game = GameCore((400, 400))
         self.gamePad = OctDirGamePad(self)
         self.gamePad.clicked.connect(self.userInput)
         self.canvas = None

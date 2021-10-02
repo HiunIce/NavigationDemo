@@ -49,14 +49,15 @@ def traj2acts(traj):
     diff = np.diff(pos, axis=0)
     return diff
 
+
 def collision_judge(map, pos, ep, ok=0):
     if(pos[0] == ep[0]) and (pos[1] == ep[1]):
-        print('that false')
-        return False, pos
+        print('that false', pos, ep, "????")
+        return True, pos
     rr, cc = draw.line(pos[1], pos[0], ep[1], ep[0])
     ep = pos
     for r, c in zip(rr, cc):
-        if (r == pos[1]) and (c == pos[0]):
+        if (r == pos[0]) and (c == pos[1]):
             continue
         # print(r, c, "the res is:", map[r, c], (map[r, c] == 0),
         #         (r >= 0) , (c >=0) , (r<map.shape[0]) , (c<map.shape[1]))
@@ -65,9 +66,9 @@ def collision_judge(map, pos, ep, ok=0):
         if rf and (map[r, c] == ok):
             ep = [c, r]
         else:
-            # print(r, c, map.shape, (r >= 0) , (c >=0) , (r < map.shape[0]) , (c < map.shape[1]))
-            # if rf:
-            #     print(map[r, c], 'collision')
+            print(r, c, map.shape, (r >= 0) , (c >=0) , (r < map.shape[0]) , (c < map.shape[1]))
+            if rf:
+                print(map[r, c], 'collision')
             return False, ep
     return True, ep
 
@@ -121,7 +122,6 @@ def getSampleLine(obs, pos, rad):
                 wallPnts.append([b, a])
                 break
             nts[b, a] = 255
-    nts[rr, cc] = 255
     return nts, np.array(wallPnts, dtype=np.int32)
 
 
@@ -177,8 +177,10 @@ if __name__ == '__main__':
     import matplotlib.pyplot as plt
 
     img = np.zeros(shape=(20, 41), dtype=np.int32)
+    img[15] = 255
     img, w = getSampleLine(img, np.array([20, 20]), 20)
     print(img.dtype, img.shape)
+    img[15] = 128
     plt.imshow(img)
     plt.show()
     

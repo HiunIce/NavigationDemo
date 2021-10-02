@@ -26,7 +26,7 @@ class GameGrid:
 
     def makeTestGrid(self):
         seeds = [1,2,3,4,5,6,7,8,9,10]
-        np.random.seed(15)
+        np.random.seed(10) #15
         for i in range(10):
             p1 = np.random.randint(0, self.__baseMap.shape[0], 2)
             p2 = np.copy(p1)

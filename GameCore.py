@@ -11,7 +11,7 @@ class GameCore:
         self.grid = GameGrid(shape)
         self.players = dict()
         self.playersPrePos = dict()
-        self.addPlayer('host')
+        self.addPlayer('host', pos=[250,250])
 
     def nextFrame(self):
         self.grid.updateGameGrid(self.players.values())
@@ -53,8 +53,8 @@ class GameCore:
     def getHostView(self):
         return self.players['host'].getPlayerView()
 
-    def addPlayer(self, name):
-        self.players[name] = Player(name, len(self.players) + 1)
+    def addPlayer(self, name, pos):
+        self.players[name] = Player(name, len(self.players) + 1, pos=pos)
         self.playersPrePos[name] = np.array(self.players[name].robot.pos)
         self.players[name].initObservation(self.grid.currentMap.shape)
 
