@@ -35,7 +35,7 @@ class Player:
         if not self.decisionList.empty():
             return
         def closest():
-            p = np.array(self.robot.pos[0], self.robot.pos[1])
+            p = np.array(self.robot.pos[1], self.robot.pos[0])
             diff = np.linalg.norm(self.fronts - p, axis=1)
             idx = np.argmin(diff, axis=0)
             tar = self.fronts[idx]
