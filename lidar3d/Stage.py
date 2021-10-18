@@ -31,7 +31,7 @@ class Stage3d:
         stage = Stage3d()
         stage.addObject(utils.makeCube(center=[0, 0, 0], shape=[10, 100, 100]))
         stage.addObject(utils.makeCube(center=[0, 0, 0], shape=[100, 10, 10]))
-        stage.addObject(utils.makeCube(center=[0, 0, 0], shape=[300, 300, 1]))
+        stage.addObject(utils.makeCube(center=[0, 0, 0], shape=[500, 500, 1]))
         stage.addObject(utils.makeSphere(center=[30, 30, 30], radius=20))
         return stage
 

@@ -70,7 +70,8 @@ def anyDisplayFilter(data):
         data = makeActor(data)
     return data
 
-def show_in_vtk(things=[], moveAxis=None, screenShoot=None, camera=None):
+
+def makeVtkRenderWindow():
     win = vtk.vtkRenderWindow()
     ren = vtk.vtkRenderer()
     ren.SetBackground(1.0, 1.0, 1.0)
@@ -80,13 +81,17 @@ def show_in_vtk(things=[], moveAxis=None, screenShoot=None, camera=None):
     iren = vtk.vtkRenderWindowInteractor()
     iren.SetInteractorStyle(vtk.vtkInteractorStyleTrackballCamera())
     iren.SetRenderWindow(win)
+    win.Render()
+    return ren, win, iren
+
+
+def show_in_vtk(things=[]):
+    ren, win, iren = makeVtkRenderWindow()
     things = [anyDisplayFilter(sth) for sth in things]
     for sth in things:
         ren.AddViewProp(sth)
 
     ren.ResetCamera(things[0].GetBounds())
-    if camera is not None:
-        ren.SetCamera(camera)
     win.Render()
     iren.Start()
 
