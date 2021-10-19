@@ -17,6 +17,7 @@ class Player:
         self.fronts = []
         self.target = None
         self.explore_rate = 0.0
+
         self.rrt_args_fast = RRTArgs()
         self.rrt_args_fast.maxSampleTimes = 50
         self.rrt_args_fast.direct_rate = 0.7

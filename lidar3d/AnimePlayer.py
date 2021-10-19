@@ -82,6 +82,6 @@ def showWhatYouSampled():
 if __name__ == "__main__":
     pass
     # test_anime() # step1 run this function
-    test_anime()
+    # test_anime()
     # test_anime_your_model() # step 2 run this function
-    # showWhatYouSampled() # step 3 run this function
+    showWhatYouSampled() # step 3 run this function
