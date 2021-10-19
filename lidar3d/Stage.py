@@ -19,8 +19,6 @@ class Stage3d:
             mapper.SetInputData(mesh)
             mesh = utils.makeActor(mesh)
             self.actor.AddPart(mesh)
-            print('actor fin')
-
         mesh = mesh.GetMapper().GetInput()
         self.appendPolyFilter.AddInputData(mesh)
         self.appendPolyFilter.Update()

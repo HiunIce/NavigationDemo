@@ -50,10 +50,11 @@ import Stage
 from lidar3d.LidarCloud import LidarCloud as LidarCloud
 from time import *
 
+
 class Lidar:
-    def __init__(self, tar, pos=[100, 100, 10]):
+    def __init__(self, tar, pos=[100, 100, 10], model=None):
         self.tar_direction = None
-        self.actor = None
+        self.actor = model
         self.sampled_pnts = np.array([])
         self.sampled_filter = LidarCloud()
         self.initSetting()
@@ -85,7 +86,10 @@ class Lidar:
                 points.append(p)
         points = np.array(points)
         self.tar_direction = points
-        self.actor = utils.makeActor(utils.makeSphere([0, 0, 0], 3), color=[0, 1, 0])
+        if self.actor is None:
+            self.actor = utils.makeActor(utils.makeSphere([0, 0, 0], 3), color=[0, 1, 0])
+        if isinstance(self.actor, vtk.vtkPolyData):
+            self.actor = utils.makeActor(self.actor)
 
     def moveInXYPlane(self, x, y):
         self.position[0] += x

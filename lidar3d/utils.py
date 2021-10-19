@@ -3,6 +3,7 @@ import os
 import numpy as np
 from vtkmodules.util import numpy_support
 
+
 def getPolyfromFile(path):
     suffix = os.path.splitext(path)[-1]
     d = dict({
@@ -14,6 +15,24 @@ def getPolyfromFile(path):
     reader.SetFileName(path)
     reader.Update()
     return reader.GetOutput()
+
+
+def transModel(mesh, rot=[0,0,0], scale=1):
+    cen = list(mesh.GetCenter())
+    trans = vtk.vtkTransform()
+    trans.Scale(scale, scale, scale)
+    trans.Translate(cen[0], cen[1], cen[2])
+    trans.RotateX(rot[0])
+    trans.RotateY(rot[1])
+    trans.RotateZ(rot[2])
+    trans.Translate(-cen[0], -cen[1], -cen[2])
+    filter = vtk.vtkTransformPolyDataFilter()
+    filter.SetTransform(trans)
+    filter.SetInputData(mesh)
+    filter.Update()
+    nm = vtk.vtkPolyData()
+    nm.DeepCopy(filter.GetOutput())
+    return nm
 
 def makeActor(mesh, color=[1, 1, 1], opacity=1.0):
     mapper = vtk.vtkPolyDataMapper()
@@ -141,3 +160,22 @@ def translateActor(obj, pos):
     mat.SetElement(1, 3, pos[1])
     mat.SetElement(2, 3, pos[2])
     obj.SetUserMatrix(mat)
+
+
+def reconstructionFromPoints(pts):
+    surf = vtk.vtkSurfaceReconstructionFilter()
+
+    poly = vtk.vtkPolyData()
+    poly.SetPoints(pts)
+    poly.Modified()
+
+    surf.SetInputData(poly)
+    surf.SetNeighborhoodSize(10)
+    surf.SetSampleSpacing(2)
+    surf.Update()
+    filter = vtk.vtkContourFilter()
+    filter.SetInputConnection(surf.GetOutputPort())
+    filter.SetValue(0, 0.0)
+    filter.Update()
+
+    return filter.GetOutput()
