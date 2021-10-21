@@ -1,3 +1,12 @@
+"""
+# Li Ang <psw.liang@link.cuhk.edu.hk>
+# Write for ELEG4701 CUHK term 1
+
+# Just take a look at the logic in this script, 
+# you don’t have to figure out what is done in each step
+"""
+
+
 import vtkmodules.all as vtk
 import os
 import numpy as np
@@ -17,11 +26,11 @@ def getPolyfromFile(path):
     return reader.GetOutput()
 
 
-def transModel(mesh, rot=[0,0,0], scale=1):
+def transModel(mesh, rot=[0,0,0], pos=[0,0,0],scale=1):
     cen = list(mesh.GetCenter())
     trans = vtk.vtkTransform()
     trans.Scale(scale, scale, scale)
-    trans.Translate(cen[0], cen[1], cen[2])
+    trans.Translate(cen[0] + pos[0], cen[1] + pos[1], cen[2] + pos[2])
     trans.RotateX(rot[0])
     trans.RotateY(rot[1])
     trans.RotateZ(rot[2])

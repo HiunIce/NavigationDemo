@@ -41,9 +41,10 @@
 # (And this is why I don’t use the ros system directly, but wrote a demo for you guys instead.
 #####
 
-
+import sys, os
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(BASE_DIR)
 import vtkmodules.all as vtk
-import os
 import lidar3d.utils as utils
 import numpy as np
 import Stage
@@ -174,15 +175,8 @@ def try_lidar():
     li = Lidar(s.mesh)
     li.setLidarPosition([100, 100, 10])
     li.scan(renderStep=True)
-    li.setLidarPosition([50, 50, 10])
-    li.scan(renderStep=True)
-
-    for i in range(50, 30, -1):
-        li.setLidarPosition([i, i, 10])
-        li.scan()
+    li.setLidarPosition([50, 100, 10])
     li.scan(renderStep=True)
 
 if __name__ == "__main__":
     try_lidar()
-
-    # then run anime player for see what happens when

@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import utils
 
+
 class RRTArgs:
     def __init__(self):
         self.move_dis = 10

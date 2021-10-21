@@ -1,3 +1,13 @@
+"""
+# Li Ang <psw.liang@link.cuhk.edu.hk>
+# Write for ELEG4701 CUHK term 1
+
+
+# this script shows how lidar works by animation
+# and you can make an reconstruction for you point clouds
+# try to make your output as similar as the stage!
+"""
+
 from lidar3d.Stage import Stage3d
 from lidar3d.LidarCore import Lidar
 import lidar3d.utils as utils
@@ -82,6 +92,5 @@ def showWhatYouSampled():
 if __name__ == "__main__":
     pass
     # test_anime() # step1 run this function
-    # test_anime()
-    # test_anime_your_model() # step 2 run this function
-    showWhatYouSampled() # step 3 run this function
+    test_anime_your_model() # step 2 run this function
+    # showWhatYouSampled() # step 3 run this function
