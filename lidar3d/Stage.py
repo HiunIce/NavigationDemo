@@ -40,7 +40,7 @@ class Stage3d:
         stage.addObject(utils.makeCube(center=[0, 0, 0], shape=[100, 10, 10]))
         stage.addObject(utils.makeCube(center=[0, 0, 0], shape=[500, 500, 1]))
         stage.addObject(utils.makeSphere(center=[30, 30, 30], radius=20))
-        # return Stage3d.make_your_stage3d()
+        return Stage3d.make_your_stage3d()
         return stage
 
     @staticmethod

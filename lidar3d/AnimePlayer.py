@@ -8,6 +8,9 @@
 # try to make your output as similar as the stage!
 """
 
+import sys, os
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(BASE_DIR)
 from lidar3d.Stage import Stage3d
 from lidar3d.LidarCore import Lidar
 import lidar3d.utils as utils
@@ -62,7 +65,7 @@ def test_anime_your_model():
 
     model = 'C:/Users/psw-e/PycharmProjects/NavigationDemo/lidar3d/model/UFO_Empty.obj'
     model = utils.getPolyfromFile(model)
-    model = utils.transModel(model, rot=[90,0,0], scale=4)
+    model = utils.transModel(model, rot=[90, 0, 0], scale=4)
     ani = AnimePlayer(turns=20, model=model)
 
     # to save the points you sampled
@@ -92,5 +95,5 @@ def showWhatYouSampled():
 if __name__ == "__main__":
     pass
     # test_anime() # step1 run this function
-    test_anime_your_model() # step 2 run this function
-    # showWhatYouSampled() # step 3 run this function
+    # test_anime_your_model() # step 2 run this function
+    showWhatYouSampled() # step 3 run this function
