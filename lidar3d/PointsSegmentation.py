@@ -30,6 +30,42 @@ def make_pnts_actor(pnts):
         actors.append(a)
     return actors
 
+
+def points2Image(pnts):
+    import cv2
+    # transpose is to make
+    # [[xyz];[xyz];[xyz]]
+    # into [xxx; yyy; zzz]
+    allPnts = np.vstack(pnts).T
+    xmin = np.min(allPnts[0])
+    xmax = np.max(allPnts[0])
+    ymin = np.min(allPnts[1])
+    ymax = np.max(allPnts[0])
+
+    origin = np.array([xmin, ymin], dtype=np.int64)
+    bounds = [int(xmax-xmin) + 1, int(ymax-ymin) + 1]
+    data = np.zeros(shape=(*bounds, 3), dtype=np.uint8)
+
+    for p in pnts:
+        color = np.random.randint(0, 255, size=3)
+
+        p = p[:,:2].astype(np.int64) - origin
+        #data[p[:0], p[:1]] = color
+        for a in p:
+            data[a[0], a[1]] = color
+
+    obj_map = cv2.cvtColor(data, cv2.COLOR_BGR2GRAY)
+    obj_map[obj_map > 0] = 255
+
+    cv2.imshow('imgs', data)
+    cv2.waitKey(0)
+    cv2.imshow('obj_map', obj_map)
+    cv2.waitKey(0)
+    cv2.imwrite('obj_map.bmp', obj_map)
+
+
+
+
 if __name__ == '__main__':
     
 
@@ -38,5 +74,5 @@ if __name__ == '__main__':
     # x_seg = segmentation(x, 'kmeans')
     # x_seg = segmentation(x, 'dbscan')
     actors = make_pnts_actor(x_seg)
-
-    utils.show_in_vtk(actors)
+    points2Image(x_seg)
+    #utils.show_in_vtk(actors)

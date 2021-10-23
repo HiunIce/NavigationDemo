@@ -2,7 +2,7 @@ import numpy as np
 
 from MobileRobot import MobileRobot
 import queue
-import utils
+import rrtUtils
 
 from RRTBase import RRT, RRTArgs
 
@@ -58,10 +58,10 @@ class Player:
         dis = self.robot.pos - tar
         if np.linalg.norm(dis) < 20:
             print('try it easy', tar, '------>', tar)
-            res, pos = utils.collision_judge(self.wallMap, self.robot.pos, tar)
+            res, pos = rrtUtils.collision_judge(self.wallMap, self.robot.pos, tar)
 
             if res:
-                traj = utils.moveDirectly(self.robot.pos, tar)
+                traj = rrtUtils.moveDirectly(self.robot.pos, tar)
             else:
                 print('then i will make rrt')
                 traj = RRT.fast_search(self.wallMap, self.robot.pos, tar, ok=0, args=self.rrt_args_fast)
@@ -69,14 +69,14 @@ class Player:
         else:
             traj = RRT.fast_search(self.wallMap, self.robot.pos, tar, ok=0, args=self.rrt_args_normal)
         print('ready to do acts')
-        acts = utils.traj2acts(traj)
+        acts = rrtUtils.traj2acts(traj)
         print('traj:', 'acts!', acts.shape, '???? pos, tar:', self.robot.pos, tar)
 
         self.putActions(acts)
 
     def moveTheory_cheat(self, cmap, tar):
         traj = RRT.fast_search(cmap, self.robot.pos, tar)
-        acts = utils.traj2acts(traj)
+        acts = rrtUtils.traj2acts(traj)
         self.putActions(acts)
 
     def putActions(self, acts):
@@ -92,7 +92,7 @@ class Player:
             print('no actions left')
             return
         action = self.decisionList.get()
-        res, pos = utils.collision_judge(cmap, self.robot.pos, self.robot.pos + action)
+        res, pos = rrtUtils.collision_judge(cmap, self.robot.pos, self.robot.pos + action)
 
         #res, pos = utils.collision_judge(cmap, self.robot.pos, action)
         #res, pos = utils.collision_judge_step_fast(cmap, self.robot.pos, action)
@@ -103,17 +103,17 @@ class Player:
                   self.robot.pos, action, '---->', pos, 'real, left:', self.decisionList.qsize())
         self.robot.pos = pos  # [100,100]
 
-        y0, y1, x0, x1 = utils.getRangeMap(self.robot.pos, self.viewRadius, cmap.shape)
+        y0, y1, x0, x1 = rrtUtils.getRangeMap(self.robot.pos, self.viewRadius, cmap.shape)
 
         obs = cmap[y0:y1, x0:x1]
         pos_t = [self.robot.pos[0] - x0, self.robot.pos[1] - y0]
-        mp, wall = utils.getSampleLine(obs, pos_t, self.viewRadius)
+        mp, wall = rrtUtils.getSampleLine(obs, pos_t, self.viewRadius)
 
         self.viewMap[y0:y1, x0:x1] += mp
         self.viewMap[pos[1], pos[0]] = 255
         self.viewMap[self.viewMap > 255] = 255
 
-        self.fronts = utils.getFrontier(self.viewMap.astype(np.uint8), self.wallMap)
+        self.fronts = rrtUtils.getFrontier(self.viewMap.astype(np.uint8), self.wallMap)
         if wall.shape[0] != 0:
             for w in wall:
                 self.wallMap[w[0]+y0,w[1]+x0] = 255
@@ -123,6 +123,6 @@ class Player:
         return self.explore_rate
         
     def getPlayerView(self):
-        return utils.drawUserView(self.viewMap.astype(np.uint8), self.wallMap,
-                                  self.fronts, [self.robot.pos, self.target])
+        return rrtUtils.drawUserView(self.viewMap.astype(np.uint8), self.wallMap,
+                                     self.fronts, [self.robot.pos, self.target])
 

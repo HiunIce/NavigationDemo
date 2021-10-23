@@ -3,7 +3,7 @@ from PyQt5.QtGui import QPixmap, QImage, QColor
 
 import numpy as np
 import cv2
-import utils
+import rrtUtils
 
 class GameGrid:
     def __init__(self, shape=(1000, 1000)):
@@ -22,7 +22,7 @@ class GameGrid:
         self.__baseMap = img
 
     def getCanvas(self):
-        return utils.toQImage(cv2.cvtColor(self.currentMap, cv2.COLOR_GRAY2BGR))
+        return rrtUtils.toQImage(cv2.cvtColor(self.currentMap, cv2.COLOR_GRAY2BGR))
 
     def makeTestGrid(self):
         seeds = [1,2,3,4,5,6,7,8,9,10]

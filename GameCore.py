@@ -2,7 +2,7 @@
 from GameGrid import GameGrid
 from Player import Player
 from PyQt5.QtGui import QPainter, QColor
-import utils
+import rrtUtils
 import numpy as np
 
 class GameCore:

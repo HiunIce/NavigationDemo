@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-import utils
+import rrtUtils
 
 
 class RRTArgs:
@@ -163,7 +163,7 @@ class RRT:
         for i in range(len(pnts)-1):
             p1 = pnts[i]
             p2 = pnts[i+1]
-            res, pos = utils.collision_judge(cmap, p1, p2)
+            res, pos = rrtUtils.collision_judge(cmap, p1, p2)
             #print(res, pos, '????', p1, p2)
 
 

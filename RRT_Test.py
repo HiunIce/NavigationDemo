@@ -1,3 +1,4 @@
+
 import numpy as np
 import cv2
 from RRTBase import RRT
@@ -5,7 +6,7 @@ import matplotlib.pyplot as plt
 
 test_rrt_seed = -1
 
-def test_RRT(displayCallback=None):
+def test_RRT(displayCallback=None, grid=None):
     import cv2
     def makeTestGrid(shape=(300, 300)):
         bm = np.zeros(shape=shape, dtype=np.uint8)
@@ -17,10 +18,17 @@ def test_RRT(displayCallback=None):
             p2[np.random.randint(0, 2)] = np.random.randint(0, 100)
             cv2.line(bm, p1, p2, 255, thickness=3, lineType=4, shift=0)
         return bm
-    bm = makeTestGrid()
+    if grid is not None:
+        bm = grid[0]
+        print(bm)
+        print(grid[1], grid[2])
+        pos = np.array(grid[1]).astype(np.int64)
+        tar = np.array(grid[2]).astype(np.int64)
+    else:
+        bm = makeTestGrid()
+        pos = [100, 100]
+        tar = [250, 250]
 
-    pos = [100, 100]
-    tar = [250, 250]
     rs = RRT.fast_search(bm, pos, tar, displayCallback=displayCallback)
 
     cv2.circle(bm, pos, 10, 255, 1)
@@ -40,11 +48,11 @@ def test_RRT(displayCallback=None):
         displayCallback(bm, add=rs)
 
 
-def testWithAnimation():
+def testWithAnimation(t_map=None):
     from PyQt5.QtGui import QPainter, QImage, QColor
     from PyQt5.QtWidgets import QWidget, QApplication
     import sys
-    import utils
+    import rrtUtils
     class showWidget(QWidget):
         def __init__(self, parent=None):
             QWidget.__init__(self, parent=parent)
@@ -53,7 +61,7 @@ def testWithAnimation():
         def paintEvent(self, a0):
             pt = QPainter(win)
             if self.img is not None:
-                pt.drawImage(self.rect(), utils.toQImage(self.img))
+                pt.drawImage(self.rect(), rrtUtils.toQImage(self.img))
 
         def setInputImg(self, img):
             self.img = img
@@ -69,20 +77,20 @@ def testWithAnimation():
             print('draw line fin')
             self.update()
 
-        def start(self):
+        def start(self, grid=None):
             def callback(a, **kargs):
                 if 'add' in kargs.keys():
                     win.drawFinishLine(kargs['add'])
                 else:
                     win.setInputImg(a)
                 QApplication.processEvents()
-            test_RRT(callback)
+            test_RRT(callback, grid)
 
 
     app = QApplication(sys.argv)
     win = showWidget()
     win.show()
-    win.start()
+    win.start(t_map)
 
     sys.exit(app.exec_())
 
