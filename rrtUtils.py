@@ -58,6 +58,7 @@ def collision_judge(map, pos, ep, ok=0):
         print('that false', pos, ep, "????")
         return True, pos
     rr, cc = draw.line(pos[1], pos[0], ep[1], ep[0])
+    pre_ep = ep[:]
     ep = pos
     for r, c in zip(rr, cc):
         if (r == pos[0]) and (c == pos[1]):
@@ -73,6 +74,8 @@ def collision_judge(map, pos, ep, ok=0):
             if rf:
                 print(map[r, c], 'collision')
             return False, ep
+    if (ep[0] == pos[0]) and(ep[1] == pos[1]):
+        return False, pre_ep
     return True, ep
 
 
@@ -90,13 +93,13 @@ def getRangeMap(pos, rad, shape):
     x0 = pos[0] - rad
     x0 = x0 if x0 > 0 else 0
 
-    x1 = pos[0] + rad + 1
+    x1 = pos[0] + rad
     x1 = x1 if x1 < shape[0] else shape[0] - 1
 
     y0 = pos[1] - rad
     y0 = y0 if y0 > 0 else 0
 
-    y1 = pos[1] + rad + 1
+    y1 = pos[1] + rad
     y1 = y1 if y1 < shape[1] else shape[1] - 1
 
     return y0, y1, x0, x1
@@ -108,8 +111,17 @@ def getSampleLine(obs, pos, rad):
     pos = np.array(pos)
     #rr, cc = draw.circle_perimeter(pos[1], pos[0], radius=rad, shape=obs.shape)
     #
-    rr, cc = draw.rectangle_perimeter(pos-rad//2,
-                                      pos+rad//2, shape=obs.shape)
+    start = (pos-rad//2)
+    end = (pos + rad//2)
+    if start[0] <= 0:
+        start[0] = 2
+    if start[1] <= 0:
+        start[1] = 2
+    if end[0] >= obs.shape[0]:
+        end[0] = obs.shape[0]-2
+    if end[1] >= obs.shape[1]:
+        end[1] = obs.shape[1]-2
+    rr, cc = draw.rectangle_perimeter(start, end, shape=obs.shape)
     w, h = obs.shape[1], obs.shape[0]
     wallPnts = []
     for r, c in zip(rr, cc):
@@ -181,9 +193,11 @@ if __name__ == '__main__':
 
     img = np.zeros(shape=(20, 41), dtype=np.int32)
     img[15] = 255
-    img, w = getSampleLine(img, np.array([20, 20]), 20)
+    p = np.array([17, 15])
+    img, w = getSampleLine(img, p, 20)
     print(img.dtype, img.shape)
     img[15] = 128
+    img[p[0], p[1]] = 50
     plt.imshow(img)
     plt.show()
     

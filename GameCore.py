@@ -11,7 +11,7 @@ class GameCore:
         self.grid = GameGrid(shape)
         self.players = dict()
         self.playersPrePos = dict()
-        self.addPlayer('host', pos=[250,250])
+        self.addPlayer('host', pos=[150, 150])
 
     def nextFrame(self):
         self.grid.updateGameGrid(self.players.values())
@@ -26,8 +26,6 @@ class GameCore:
             
         
     def finishHostFrame(self, callback):
-
-
         while not self.players['host'].decisionList.empty():
             self.nextFrame()
             callback()

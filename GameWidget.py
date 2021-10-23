@@ -16,7 +16,7 @@ class GameWidget(QWidget):
         QWidget.__init__(self, parent=parent)
         self.resize(1500, 500)
         self.setWindowTitle("Game Widget")
-        self.game = GameCore((400, 400))
+        self.game = GameCore((200, 200))
         self.gamePad = OctDirGamePad(self)
         self.gamePad.clicked.connect(self.userInput)
         self.canvas = None
@@ -54,7 +54,8 @@ class GameWidget(QWidget):
         if self.gameRect.contains(a0.pos()):
             x = int(a0.pos().x() * (self.game.shape[0] / self.gameRect.width()))
             y = int(a0.pos().y() * (self.game.shape[1] / self.gameRect.height()))
-            self.game.directMove('host', [x, y])
+            p = self.game.players['host'].robot.pos + np.array([1,1])
+            self.game.directMove('host', p)
             def callback():
                 self.render()
                 QApplication.processEvents()

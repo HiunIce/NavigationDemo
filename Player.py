@@ -6,6 +6,10 @@ import rrtUtils
 
 from RRTBase import RRT, RRTArgs
 
+import matplotlib.pyplot as plt
+
+import cv2
+
 class Player:
     def __init__(self, name, idx, pos):
         self.name = name
@@ -24,6 +28,7 @@ class Player:
 
         self.rrt_args_normal = RRTArgs()
         self.rrt_args_normal.maxSampleTimes = 500
+        self.pre_idx = -1
 
     def initObservation(self, shape):
         self.viewMap = np.zeros(shape=shape, dtype=np.uint16)
@@ -32,46 +37,34 @@ class Player:
     def clearDecision(self):
         self.decisionList = queue.Queue()
 
+    def closest(self):
+        # Todo: you need to find an index, to make program work
+
+        if idx == self.pre_idx:
+            # print('avoid holds a bug')
+            idx = np.random.randint(0, diff.shape[0], 1)[0]
+        tar = self.fronts[idx]
+        self.pre_idx = idx
+        return tar
+
     def planTheory(self):
         if not self.decisionList.empty():
             return
-        def closest():
-            p = np.array(self.robot.pos[1], self.robot.pos[0])
-            diff = np.linalg.norm(self.fronts - p, axis=1)
-            idx = np.argmin(diff, axis=0)
-            tar = self.fronts[idx]
-            print('the closet is', idx, tar)
-            if (self.robot.pos[0] == tar[0]) and (self.robot.pos[1] == tar[1]):
-                tar[0] += np.random.randint(-2, 2)
-                tar[1] += np.random.randint(-2, 2)
-                tar = np.clip(tar, 0, self.wallMap.shape[0]-1)
-
-            print('idx', idx, 'tar', tar,  'choice num', diff.shape[0],
-                  'pos:', self.robot.pos)
-            return tar
-        self.target = closest()
+        self.target = self.closest()
         self.moveTheory(self.target)
-        print('mov theory fin ---->', self.target)
 
     def moveTheory(self, tar):
-        print('ready to make rrt', self.robot.pos, '----->',tar)
+        # Todo: you can change self.rrt_args_fast to accelarte your program.
         dis = self.robot.pos - tar
         if np.linalg.norm(dis) < 20:
-            print('try it easy', tar, '------>', tar)
             res, pos = rrtUtils.collision_judge(self.wallMap, self.robot.pos, tar)
-
             if res:
                 traj = rrtUtils.moveDirectly(self.robot.pos, tar)
             else:
-                print('then i will make rrt')
                 traj = RRT.fast_search(self.wallMap, self.robot.pos, tar, ok=0, args=self.rrt_args_fast)
-            print('dir move fin', res)
         else:
             traj = RRT.fast_search(self.wallMap, self.robot.pos, tar, ok=0, args=self.rrt_args_normal)
-        print('ready to do acts')
         acts = rrtUtils.traj2acts(traj)
-        print('traj:', 'acts!', acts.shape, '???? pos, tar:', self.robot.pos, tar)
-
         self.putActions(acts)
 
     def moveTheory_cheat(self, cmap, tar):
@@ -85,7 +78,6 @@ class Player:
             if (a[0] == 0) and (a[1] == 0):
                 continue
             self.decisionList.put(a)
-        print('put actions', pre, '---->', self.decisionList.qsize())
 
     def act(self, cmap):
         if self.decisionList.qsize() == 0:
@@ -93,15 +85,14 @@ class Player:
             return
         action = self.decisionList.get()
         res, pos = rrtUtils.collision_judge(cmap, self.robot.pos, self.robot.pos + action)
-
         #res, pos = utils.collision_judge(cmap, self.robot.pos, action)
         #res, pos = utils.collision_judge_step_fast(cmap, self.robot.pos, action)
         if not res:
             # directly give up all
             self.clearDecision()
-            print(self.robot.pos+action, 'ready???',
+            print(self.robot.pos+action, 'ready to give up all',
                   self.robot.pos, action, '---->', pos, 'real, left:', self.decisionList.qsize())
-        self.robot.pos = pos  # [100,100]
+        self.robot.pos = pos # [100,100]
 
         y0, y1, x0, x1 = rrtUtils.getRangeMap(self.robot.pos, self.viewRadius, cmap.shape)
 
@@ -116,7 +107,8 @@ class Player:
         self.fronts = rrtUtils.getFrontier(self.viewMap.astype(np.uint8), self.wallMap)
         if wall.shape[0] != 0:
             for w in wall:
-                self.wallMap[w[0]+y0,w[1]+x0] = 255
+                self.wallMap[w[0]+y0, w[1]+x0] = 255
+
 
     def getExploreRate(self):
         self.explore_rate = np.sum(self.viewMap/255) / (self.viewMap.shape[0]*self.viewMap.shape[1])

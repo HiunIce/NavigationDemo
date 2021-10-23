@@ -13,8 +13,8 @@ class GameGrid:
 
     def updateGameGrid(self, players):
         self.currentMap = self.__baseMap.copy()
-        for p in players:
-            self.currentMap[p.robot.pos[0], p.robot.pos[1]] = p.robot.type
+        # for p in players:
+        #     self.currentMap[p.robot.pos[0], p.robot.pos[1]] = p.robot.type
 
     def setBaseMap(self, img):
         if isinstance(img, str):
@@ -25,12 +25,18 @@ class GameGrid:
         return rrtUtils.toQImage(cv2.cvtColor(self.currentMap, cv2.COLOR_GRAY2BGR))
 
     def makeTestGrid(self):
-        seeds = [1,2,3,4,5,6,7,8,9,10]
-        np.random.seed(10) #15
-        for i in range(10):
-            p1 = np.random.randint(0, self.__baseMap.shape[0], 2)
-            p2 = np.copy(p1)
-            p2[np.random.randint(0, 2)] = np.random.randint(0, 100)
-            cv2.line(self.__baseMap, p1, p2, 255, thickness=3, lineType=4, shift=0)
+
+        self.__baseMap[0:10, :] = 255
+        self.__baseMap[self.__baseMap.shape[0]-3:, :] = 255
+        self.__baseMap[:, :10] = 255
+        self.__baseMap[:, self.__baseMap.shape[1]-3:] = 255
+        self.__baseMap[:, 0:4] = 255
+
+        self.__baseMap[50, 60:120] = 255
+        self.__baseMap[120, :120] = 255
+        cv2.line(self.__baseMap, (100, 200), (100, 300), 255, thickness=1, lineType=4, shift=0)
+        cv2.line(self.__baseMap, (200, 200), (200, 300), 255, thickness=1, lineType=4, shift=0)
+        cv2.line(self.__baseMap, (150, 0), (150, 100), 255, thickness=1, lineType=4, shift=0)
+        cv2.line(self.__baseMap, (200, 0), (200, 100), 255, thickness=1, lineType=4, shift=0)
 
         self.currentMap = self.__baseMap.copy()
