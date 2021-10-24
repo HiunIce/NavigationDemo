@@ -169,7 +169,6 @@ def getFrontier(view, wall):
     nf = np.array(nf)
     return nf
 
-from pyinstrument import Profiler
 
 def drawUserView(view, wall, front, pnts=None):
     # profiler = Profiler()

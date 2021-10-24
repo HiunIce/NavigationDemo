@@ -39,10 +39,19 @@ class Player:
 
     def closest(self):
         # Todo: you need to find an index, to make program work
-
+        idx = np.random.randint(0, self.fronts.shape[0], 1)[0]
+        # in this case, the selection is of random.
+        # please find the closest fronts point!
+        # hints1:  np.linalg.norm(vec) is used to calculate the norm(k=2) of vec
+        # hints2:  np.argmin() is used to find the minmium index.
+        # hints3:  Please don't regard yourself as a package dictionary, 
+        #          no one can memorize all the functions and bugs. 
+        #          Just like mentioned in the second lesson, 
+        #          you can search for'numpy, how to do xxxxx' with google.
         if idx == self.pre_idx:
             # print('avoid holds a bug')
-            idx = np.random.randint(0, diff.shape[0], 1)[0]
+            idx = np.random.randint(0, self.fronts.shape[0], 1)[0]
+
         tar = self.fronts[idx]
         self.pre_idx = idx
         return tar

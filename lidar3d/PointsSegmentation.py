@@ -46,7 +46,7 @@ def points2Image(pnts):
     bounds = [int(xmax-xmin) + 1, int(ymax-ymin) + 1]
     data = np.zeros(shape=(*bounds, 3), dtype=np.uint8)
 
-    for p in pnts:
+    for p in pnts: 
         color = np.random.randint(0, 255, size=3)
 
         p = p[:,:2].astype(np.int64) - origin
