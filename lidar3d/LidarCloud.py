@@ -39,4 +39,3 @@ class LidarCloud:
     def Update(self):
         # the upper case of 'Update' is to keep the coding style with vtk
         self.glyph.Update()
-        # self.mapper.Update()

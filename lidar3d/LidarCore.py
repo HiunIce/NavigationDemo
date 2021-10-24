@@ -129,12 +129,7 @@ class Lidar:
         else:
             self.sampled_pnts = np.append(self.sampled_pnts, res, axis=0)
 
-        #update_time = time()
         self.sampled_filter.setPoints(self.sampled_pnts)
-        # print('update time', time() - update_time, 's')
-        # make_time = time()
-        # all_pnts = utils.makeActor(utils.makePointCloud(self.sampled_pnts, 0.3), color=[0, 0, 1])  # blue
-        # print('make time', time() - make_time, 's')
 
         print(self.sampled_pnts.shape, '?')
         if renderStep: # if the arg is ture, show somethings to user
@@ -142,7 +137,6 @@ class Lidar:
             tar_points = utils.makeActor(utils.makePointCloud(m_p, 0.4), color=[1, 0, 0]) #read
             make_time = time()
             all_pnts = utils.makeActor(utils.makePointCloud(self.sampled_pnts, 0.3), color=[0, 0, 1]) # blue
-            print('make time', time() - make_time, 's')
             tar_actor = utils.makeActor(self.target_model, opacity=1) # the background
             utils.show_in_vtk([tar_points, collisions, self.actor, tar_actor, self.sampled_filter.actor])
 

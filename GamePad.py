@@ -1,8 +1,9 @@
 # cython: language_level=3
 # -*- mode: python ; coding: utf-8 -*-
-from PyQt5.QtCore import QRect, pyqtSignal
-from PyQt5.QtGui import QPaintEvent
-from PyQt5.QtWidgets import QWidget, QPushButton, QApplication
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QWidget, QPushButton
+
+
 class CrossButton(QWidget):
     clicked = pyqtSignal(float, float)
 

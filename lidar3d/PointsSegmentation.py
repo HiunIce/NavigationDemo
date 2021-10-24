@@ -6,6 +6,7 @@ from sklearn.cluster import DBSCAN, KMeans
 import numpy as np
 import lidar3d.utils as utils
 
+
 def segmentation(x, mode='rule'):
     if mode == 'rule':
         y_pred = (x[:,2] > 1)
@@ -49,7 +50,7 @@ def points2Image(pnts):
     for p in pnts: 
         color = np.random.randint(0, 255, size=3)
 
-        p = p[:,:2].astype(np.int64) - origin
+        p = p[:, :2].astype(np.int64) - origin
         #data[p[:0], p[:1]] = color
         for a in p:
             data[a[0], a[1]] = color
@@ -64,10 +65,7 @@ def points2Image(pnts):
     cv2.imwrite('obj_map.bmp', obj_map)
 
 
-
-
 if __name__ == '__main__':
-    
 
     x = np.load('test_pnt.npy')
     x_seg = segmentation(x, 'rule')

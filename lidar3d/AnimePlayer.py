@@ -63,21 +63,25 @@ def test_anime_your_model():
     # if your model is small or need to be rotated
     # use function utils.transModel.
 
-    model = 'C:/Users/psw-e/PycharmProjects/NavigationDemo/lidar3d/model/UFO_Empty.obj'
-    model = utils.getPolyfromFile(model)
-    model = utils.transModel(model, rot=[90, 0, 0], scale=4)
+    model = 'lidar3d/model/UFO_Empty.obj'
+    if os.path.exists(model):
+        model = utils.getPolyfromFile(model)
+        model = utils.transModel(model, rot=[90, 0, 0], scale=4)
+    else:
+        model = None
     ani = AnimePlayer(turns=20, model=model)
 
     # to save the points you sampled
     # it will be saved after you closed the window
     np.save('test_pnt.npy', ani.li.sampled_pnts)
+    print('the point clouds saved!')
 
 
 def showWhatYouSampled():
     # take a screen shot of your sampled feature
     # remember take a photo for the result
     # because the function is time consuming
-
+    print('ready to reconstruction')
     pts = np.load('test_pnt.npy')
     cloud = utils.makeActor(utils.makePointCloud(pts, radius=0.3), color=[0, 1, 0])
     pts = utils.numpyArray2vtkPoints(pts)
@@ -95,5 +99,5 @@ def showWhatYouSampled():
 if __name__ == "__main__":
     pass
     # test_anime() # step1 run this function
-    # test_anime_your_model() # step 2 run this function
-    showWhatYouSampled() # step 3 run this function
+    test_anime_your_model() # step 2 run this function
+    # showWhatYouSampled() # step 3 run this function

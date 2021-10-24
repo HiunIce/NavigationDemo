@@ -8,7 +8,6 @@ import sys, os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 import vtkmodules.all as vtk
-import os
 import lidar3d.utils as utils
 import numpy as np
 

@@ -1,9 +1,7 @@
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap, QImage, QColor
-
 import numpy as np
 import cv2
 import rrtUtils
+
 
 class GameGrid:
     def __init__(self, shape=(1000, 1000)):
@@ -25,7 +23,6 @@ class GameGrid:
         return rrtUtils.toQImage(cv2.cvtColor(self.currentMap, cv2.COLOR_GRAY2BGR))
 
     def makeTestGrid(self):
-
         self.__baseMap[0:10, :] = 255
         self.__baseMap[self.__baseMap.shape[0]-3:, :] = 255
         self.__baseMap[:, :10] = 255

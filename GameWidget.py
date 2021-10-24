@@ -1,15 +1,14 @@
 # cython: language_level=3
 # -*- mode: python ; coding: utf-8 -*-
 
-from PyQt5.QtCore import Qt, QRect
-from PyQt5.QtGui import QPainter, QColor, QPen, QFont
-from PyQt5.QtWidgets import QWidget, QApplication, QTextEdit
+from PyQt5.QtCore import QRect
+from PyQt5.QtGui import QPainter
+from PyQt5.QtWidgets import QWidget, QApplication
 
 from GameCore import GameCore
 from GamePad import OctDirGamePad
 import numpy as np
 
-import RRTBase
 
 class GameWidget(QWidget):
     def __init__(self, parent=None):
@@ -56,6 +55,7 @@ class GameWidget(QWidget):
             y = int(a0.pos().y() * (self.game.shape[1] / self.gameRect.height()))
             p = self.game.players['host'].robot.pos + np.array([1,1])
             self.game.directMove('host', p)
+
             def callback():
                 self.render()
                 QApplication.processEvents()
@@ -66,6 +66,7 @@ class GameWidget(QWidget):
         pt.drawImage(self.gameRect, self.canvas)
         pt.drawImage(self.userRect, self.userView)
         self.setWindowTitle('{}'.format(self.game.players['host'].getExploreRate()))
+
 
 def testWidget():
     import sys
