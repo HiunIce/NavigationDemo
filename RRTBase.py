@@ -89,7 +89,9 @@ class RRT:
             dis = np.linalg.norm(dir)
             dir = dir/(dis+0.001)
             md = self.args.move_dis if np.random.rand() < br else self.args.move_dis * bs
-            tar = (p + dir * md).astype(np.int32)
+            if dis > self.args.move_dis:
+                tar = (p + dir * md).astype(np.int32)
+
             #print(p, 'and the filtered pnt is', tar)
             da = np.linalg.norm(np.array(self.target) - np.array(p))
             #print('the dis is', de)
